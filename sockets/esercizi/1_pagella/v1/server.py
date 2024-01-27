@@ -38,11 +38,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
                     studente = diz[0]
                 else:
                     print("Studente non trovato!")
+            
+            # Comando #set
             elif comando =="#set":
                 if parametri[0] in diz:
-                    studente = diz[0]
+                    print("Studente già presente!")
                 else:
-                    print("Studente non trovato!")
+                    diz.append(studente)
+            
+            
 
 
                 
