@@ -1,54 +1,68 @@
-import socket, json
+import socket
+import json
 from threading import Thread
 
-SERVER_ADDRESS = '127.0.0.1'
+SERVER_ADDRESS = "127.0.0.1"
 SERVER_PORT = 22004
+BUFFER_SIZE = 1024
+
 
 def ricevi_comandi(sock_service, addr_client):
+    print("ricevo comandi da:", addr_client)
     with sock_service as sock_client:
         while True:
-            data = sock_client.recv(1024)
+            data=sock_client.recv(BUFFER_SIZE).decode()
             if not data:
                 break
-            
-            data=data.decode()
-            data=json.loads(data)
-            primoNumero=data['primoNumero']
-            operazione=data['operazione']
-            secondoNumero=data['secondoNumero']
+            data = json.loads(data)
+        
+            primoNumero = data["primoNumero"]
+            operazione = data["operazione"]
+            secondoNumero = data["secondoNumero"]
 
-            if(operazione != 'x' and operazione != '+' and operazione != '-' and operazione != '/'):
-                print("operatore non accettabile")
-                break
-            else:
-                if(operazione == 'x'):
-                    risultato=primoNumero*secondoNumero
-                elif(operazione == '+'):
-                    risultato=primoNumero+secondoNumero
-                elif(operazione == '-'):
-                    risultato=primoNumero-secondoNumero
+            risultato = 0
+            if operazione == '+':
+                    risultato = primoNumero + secondoNumero
+            elif operazione == '-':
+                    risultato = primoNumero - secondoNumero
+            elif operazione == '*':
+                    risultato = primoNumero * secondoNumero
+            elif operazione == '/':
+                if secondoNumero != 0:
+                    risultato = primoNumero / secondoNumero
                 else:
-                    risultato=primoNumero/secondoNumero
-                sock_client.sendall(str(risultato).encode())
-            print(f"Invio dei dati calcolati a {addr_client}")
-            print("Chiusura connessione...")
+                    "impossibile dividere per 0!"
+            elif operazione == '%':
+                risultato = primoNumero % secondoNumero
 
-def ricevi_connessioni(sock_listen, indirizzo, porta):
-    while True:
-        sock_service, address_client = sock_listen.accept()
-        try:
-            print(f"Connesso con: {indirizzo}:{porta}")
-            Thread(target = ricevi_comandi, args = (sock_service, address_client)).start()
-        except:
-            sock_listen.close()
+            sock_service.sendall((str(risultato)).encode())
+    print("connessione con :", addr_client," chiusa")
 
-def avvia_server(indirizzo, porta):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
-        sock_server.bind((indirizzo, porta))
-        sock_server.listen()
-        ricevi_connessioni(sock_server, indirizzo, porta)
+def ricevi_connessioni(sock_listen):
+     print("server in ascolto su: ", ((SERVER_ADDRESS, SERVER_PORT)))
+     while True:
+          sock_service,address_client = sock_listen.accept()
+          print("connessione ricevuta da: ",address_client)
+          print("creo un thread per servire le richieste")
+          try:
+               Thread(target=ricevi_comandi, args = (sock_service,address_client)).start()
+          except:
+               print("il thread non si avvia")
+               sock_listen.close()
 
-print("In attesa di connessione...")
-avvia_server(SERVER_ADDRESS, SERVER_PORT)
+def avvio_server(indirizzo,porta):
+     print("avvio in corso")
+     try:
+          sock_listen=socket.socket()
+          sock_listen.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+          sock_listen.bind((indirizzo,porta))
+          sock_listen.listen(5)
+          print("server avviato")
+          ricevi_connessioni(sock_listen)
+        
+     except socket.error as errore:
+          print("errore nell'avvio del server",errore)
 
-
+if __name__ == '__main__':
+    avvio_server(SERVER_ADDRESS, SERVER_PORT)
+print("Termina")

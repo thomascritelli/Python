@@ -1,8 +1,8 @@
 import socket
 import json
 
-SERVER_IP = "127.0.0.1"
-SERVER_PORT = 5005
+SERVER_IP = '127.0.0.1'
+SERVER_PORT = 22004
 BUFFER_SIZE = 1024
 
 diz = {'antonio barbera': [['matematica', 8, 1], ['italiano', 6, 1], ['inglese', 9.5, 0], ['storia', 8, 2], ['geografia', 8, 1]],
