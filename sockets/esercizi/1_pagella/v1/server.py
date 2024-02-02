@@ -1,6 +1,4 @@
-import socket, json, logging
-import ctypes
-import msvcrt
+import socket, json
 
 SERVER_IP = '127.0.0.1'
 SERVER_PORT = 22004
@@ -11,13 +9,6 @@ diz = {'antonio barbera': [['matematica', 8, 1], ['italiano', 6, 1], ['inglese',
        'nicola spina': [['matematica', 7.5, 2], ['italiano', 6, 2], ['inglese', 4, 3], ['storia', 8.5, 2], ['geografia', 8, 2]],
       }
 
-logging.basicConfig(filename='logfile.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
-logging.debug('Questo è un messaggio di debug')
-logging.info('Questo è un messaggio informativo')
-logging.warning('Questo è un messaggio di avviso')
-logging.error('Questo è un messaggio di errore')
-logging.critical('Questo è un messaggio critico')
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
     sock_server.bind((SERVER_IP, SERVER_PORT))
@@ -56,7 +47,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
                     risp = "Studente aggiunto"
             
             elif comando == "put":
-                try:
+                
                     materia = parametri[1]
                     voto = parametri[2]
                     ore = parametri[3]
@@ -65,18 +56,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
                         risp = "Studente Aggiornato"
                     else:
                         risp = "Studente non trovato!"
-                except: 
-
-                    
-                    ctypes.windll.kernel32.PostQuitMessage(0)
-                    print("Premi un tasto per chiudere il terminale.")
-                    
-                    msvcrt.getch()
 
             risposta = {
                 'risp':risp,
                 'richiesta':richiesta,
             }
-
 
             sock_service.sendall(json.dumps(risp).encode())
