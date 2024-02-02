@@ -22,7 +22,7 @@ while True:
             materia = input("Inserisci il nome della materia: ").lower().strip()
             voto = float(input("Inserisci il voto:"))
             ore = int(input("Inserisci il numero di ore per assenza: "))
-        parametri.extend([nomeStudente, materia, voto, ore])
+        parametri.extend([nomeStudente, materia, voto])
 
     else:
         if comando == "close":
@@ -33,6 +33,12 @@ while True:
     }
     istruzioni = json.dumps(istruzioni)
     sock.sendall(istruzioni.encode("UTF-8"))
-
     data = sock.recv(BUFFER_SIZE)
-    print("Risposta dal server:", data.decode("UTF-8"))
+    
+    data = data.decode()
+    data = json.loads(data)
+    risp = data['risp']
+    richiesta = data['richiesta']
+    print(richiesta)
+    
+    print("Risposta dal server:", data)

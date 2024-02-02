@@ -1,5 +1,6 @@
-import socket
-import json
+import socket, json, logging
+import ctypes
+import msvcrt
 
 SERVER_IP = '127.0.0.1'
 SERVER_PORT = 22004
@@ -10,53 +11,72 @@ diz = {'antonio barbera': [['matematica', 8, 1], ['italiano', 6, 1], ['inglese',
        'nicola spina': [['matematica', 7.5, 2], ['italiano', 6, 2], ['inglese', 4, 3], ['storia', 8.5, 2], ['geografia', 8, 2]],
       }
 
+logging.basicConfig(filename='logfile.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+logging.debug('Questo è un messaggio di debug')
+logging.info('Questo è un messaggio informativo')
+logging.warning('Questo è un messaggio di avviso')
+logging.error('Questo è un messaggio di errore')
+logging.critical('Questo è un messaggio critico')
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
     sock_server.bind((SERVER_IP, SERVER_PORT))
     sock_server.listen()
     print("Attesa del client...")
-
+    sock_service, address_client = sock_server.accept()
     while True:
-        sock_service, address_client = sock_server.accept()
         data = sock_service.recv(BUFFER_SIZE)
-
+        richiesta = ""
         if not data:
             break
         else:
             data = data.decode()
             data = json.loads(data)
 
-            # Assegnamento dei dati ad una variabile
             comando = data['comando']
             parametri = data['parametri']
 
-            # Comando #list
             if comando == "list":
-                risp = ("OK", diz)
-
-            # Comando #get
+                richiesta = diz
+                risp = "OK"
+                
             elif comando == "get":
                 if parametri[0] in diz:
-                    studente = diz[parametri[0]]
-                    risp = ("OK", studente)
+                    richiesta = diz[parametri[0]]
+                    risp = "OK"
+                    print(diz[parametri[0]])
                 else:
-                    risp = ("Studente non trovato!", None)
+                    risp = "Studente non trovato!"
 
-            # Comando #set
             elif comando == "set":
                 if parametri[0] in diz:
-                    risp = ("Studente già presente!", None)
+                    risp = "Studente già presente!"
                 else:
                     diz[parametri[0]] = parametri[1:]
-                    risp = ("OK", diz)
+                    risp = "Studente aggiunto"
             
             elif comando == "put":
-                materia = parametri[1]
-                voto = parametri[2]
-                ore = parametri[3]
-                if parametri[0] in diz:
-                    diz[parametri[0]].append([materia, voto, ore])
-                else:
-                    risp = ("Studente non trovato!", None)
+                try:
+                    materia = parametri[1]
+                    voto = parametri[2]
+                    ore = parametri[3]
+                    if parametri[0] in diz:
+                        diz[parametri[0]].append([materia, voto, ore])
+                        risp = "Studente Aggiornato"
+                    else:
+                        risp = "Studente non trovato!"
+                except: 
+
+                    
+                    ctypes.windll.kernel32.PostQuitMessage(0)
+                    print("Premi un tasto per chiudere il terminale.")
+                    
+                    msvcrt.getch()
+
+            risposta = {
+                'risp':risp,
+                'richiesta':richiesta,
+            }
 
 
             sock_service.sendall(json.dumps(risp).encode())

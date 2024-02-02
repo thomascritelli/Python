@@ -4,7 +4,7 @@ import socket, sys, random, os, time, threading, multiprocessing, json
 
 
 NUM_WORKER = 5
-SERVER_ADDRESS = "127.0.0.1"
+SERVER_ADDRESS = "192.168.9.50"
 SERVER_PORT = 22004
 
 def genera_richieste(SERVER_ADDRESS, SERVER_PORT):

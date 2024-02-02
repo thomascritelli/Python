@@ -1,0 +1,20 @@
+2024-02-02 10:54:26,785 - DEBUG - Questo è un messaggio di debug
+2024-02-02 10:54:26,786 - INFO - Questo è un messaggio informativo
+2024-02-02 10:54:26,786 - WARNING - Questo è un messaggio di avviso
+2024-02-02 10:54:26,786 - ERROR - Questo è un messaggio di errore
+2024-02-02 10:54:26,786 - CRITICAL - Questo è un messaggio critico
+2024-02-02 11:00:23,622 - DEBUG - Questo è un messaggio di debug
+2024-02-02 11:00:23,622 - INFO - Questo è un messaggio informativo
+2024-02-02 11:00:23,622 - WARNING - Questo è un messaggio di avviso
+2024-02-02 11:00:23,622 - ERROR - Questo è un messaggio di errore
+2024-02-02 11:00:23,622 - CRITICAL - Questo è un messaggio critico
+2024-02-02 11:01:26,063 - DEBUG - Questo è un messaggio di debug
+2024-02-02 11:01:26,276 - INFO - Questo è un messaggio informativo
+2024-02-02 11:01:26,276 - WARNING - Questo è un messaggio di avviso
+2024-02-02 11:01:26,276 - ERROR - Questo è un messaggio di errore
+2024-02-02 11:01:26,276 - CRITICAL - Questo è un messaggio critico
+2024-02-02 11:02:38,635 - DEBUG - Questo è un messaggio di debug
+2024-02-02 11:02:38,635 - INFO - Questo è un messaggio informativo
+2024-02-02 11:02:38,635 - WARNING - Questo è un messaggio di avviso
+2024-02-02 11:02:38,635 - ERROR - Questo è un messaggio di errore
+2024-02-02 11:02:38,635 - CRITICAL - Questo è un messaggio critico
