@@ -32,7 +32,7 @@ while True:
         'parametri': parametri,
     }
     istruzioni = json.dumps(istruzioni)
-    sock.sendall(istruzioni.encode("UTF-8"))
+    sock.sendto(istruzioni.encode("UTF-8"), (SERVER_IP,SERVER_PORT))
     data = sock.recv(BUFFER_SIZE)
     
     data = data.decode()

@@ -62,4 +62,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
                 'richiesta':richiesta,
             }
 
-            sock_service.sendall(json.dumps(risp).encode())
+            sock_server.sendto(json.dumps(risp).encode(), (SERVER_IP,SERVER_PORT))
