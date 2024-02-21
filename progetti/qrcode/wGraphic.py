@@ -1,31 +1,39 @@
 import tkinter as tk
 from tkinter import ttk
-import qrcode
 from PIL import Image, ImageTk
+import qrcode
 
-def generate_qr_code(s):
-    img = qrcode.make(s)
-    img.save('qrcode.png')
+# funzione per generare il qrcode
+def generate_qr_code(url, nome):
+    img = qrcode.make(url)
+    img.save(f'{nome}.png')
+    show_qr_code(nome)
 
-def show_qr_code():
-    image = Image.open('qrcode.png')
+# funzione per visualizzare il qr code nella finestra
+def show_qr_code(nome):
+    image = Image.open(f'{nome}.png')
     photo = ImageTk.PhotoImage(image)
     qr_label.config(image=photo)
     qr_label.image = photo
 
 # root window
 root = tk.Tk()
-root.geometry('300x200')
+root.geometry('900x700')
 root.title('QR Code Generator')
 
-
-
-
 # Entry
-text = tk.StringVar()
-textbox = ttk.Entry(root, textvariable=text)
+nome = tk.StringVar()
+url = tk.StringVar()
+textboxNome = ttk.Entry(root, textvariable=nome)
+textboxUrl = ttk.Entry(root, textvariable=url)
 
-textbox.pack(
+textboxNome.pack(
+    ipadx=5,
+    ipady=5,
+    expand=True
+    )
+
+textboxUrl.pack(
     ipadx=5,
     ipady=5,
     expand=True
@@ -35,7 +43,7 @@ textbox.pack(
 ok_button = ttk.Button(
     root,
     text='Genera',
-    command=lambda: generate_qr_code(text.get())
+    command=lambda: generate_qr_code(url.get(), nome.get())
 )
 
 ok_button.pack(
@@ -57,12 +65,9 @@ exit_button.pack(
     expand=True
 )
 
-
 # QR code label
 qr_label = ttk.Label(root)
 qr_label.pack(ipadx=5, ipady=5, expand=True)
-
-
 
 root.mainloop()
 
