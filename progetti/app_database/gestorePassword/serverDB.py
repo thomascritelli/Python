@@ -55,10 +55,20 @@ def execute_query(connection, query):
     except Error as err:
         print(f"Error: '{err}'")
 
-connection = create_db_connection("localhost", "root", "", "gestione_password")
 
+
+def read_query(connection, query):
+    cursor = connection.cursor()
+    result = None
+    try:
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
+    except Error as err:
+        print(f"Error: '{err}'")
 
 # MAIN
+connection = create_db_connection("localhost", "root", "", "gestore_password")
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
     sock_server.bind((SERVER_IP, SERVER_PORT))
     sock_server.listen()
@@ -72,6 +82,23 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock_server:
         else:
             data = data.decode()
             data = json.loads(data)
+            comando = data['comando']
+            query = data['query']
+
+            if comando != "registrazione":
+                results = read_query(connection, query)
+                risp = "ok"
+            else:
+                execute_query(connection, query)
+                risp = "ok"
+
+            risposta = {
+                'risp':risp,
+                'results':results,
+            }
+            
+            sock_server.sendto(json.dumps(risposta).encode(), (SERVER_IP,SERVER_PORT))
+
             
 
 
