@@ -6,8 +6,6 @@ SERVER_IP = '127.0.0.1'
 SERVER_PORT = 22004
 BUFFER_SIZE = 1024
 
-
-
 # Function to connect to the MySQL server
 def create_server_connection(host_name, user_name, user_password):
     connection = None
@@ -36,7 +34,6 @@ def create_db_connection(host_name, user_name, user_password, db_name):
         print("MySQL Database connection successful")
     except Error as err:
         print(f"Error: '{err}'")
-
     return connection
 
 # Function to create the database
